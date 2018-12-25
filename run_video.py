@@ -4,9 +4,14 @@ import dlib
 import numpy as np
 import tensorflow as tf
 from imutils import video
+import os
 
 CROP_SIZE = 256
 DOWNSAMPLE_RATIO = 4
+
+def makedirs(folder):
+    if not os.path.exists(folder):
+        os.makedirs(folder)
 
 
 def reshape_for_polyline(array):
@@ -40,6 +45,7 @@ def load_graph(frozen_graph_filename):
 
 
 def main():
+    makedirs(args.output_folder)
     # TensorFlow
     graph = load_graph(args.frozen_model_file)
     image_tensor = graph.get_tensor_by_name('image_tensor:0')
@@ -47,9 +53,7 @@ def main():
     sess = tf.Session(graph=graph)
 
     # OpenCV
-    # cap = cv2.VideoCapture(args.video_source)
-    cap = cv2.VideoCapture("output.mp4")
-    # fps = video.FPS().start()
+    cap = cv2.VideoCapture(args.video_source)
 
     count = 0
     while(cap.isOpened()):
@@ -101,31 +105,22 @@ def main():
         image_landmark = np.concatenate([resize(black_image), image_bgr], axis=1)
 
         if args.display_landmark == 0:
-            cv2.imwrite('test/output_%d.jpg' % count, image_normal)
+            cv2.imwrite(os.path.join(args.output_folder, "output_%d.jpg" % count), image_normal)
         else:
-            cv2.imwrite('test/output_%d.jpg' % count, image_landmark)
-
-        # fps.update()
-        # if cv2.waitKey(1) & 0xFF == ord('q'):
-        #     break
-
-    # fps.stop()
-    # print('[INFO] elapsed time (total): {:.2f}'.format(fps.elapsed()))
-    # print('[INFO] approx. FPS: {:.2f}'.format(fps.fps()))
+            cv2.imwrite(os.path.join(args.output_folder, "output_%d.jpg" % count), image_landmark)
 
     sess.close()
     cap.release()
-    # cv2.destroyAllWindows()
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-src', '--source', dest='video_source', type=int,
-                        default=0, help='Device index of the camera.')
+    parser.add_argument('-src', '--source', dest='video_source', type=str, help='Video file path.')
     parser.add_argument('--show', dest='display_landmark', type=int, default=0, choices=[0, 1],
                         help='0 shows the normal input and 1 the facial landmark.')
     parser.add_argument('--landmark-model', dest='face_landmark_shape_file', type=str, help='Face landmark model file.')
     parser.add_argument('--tf-model', dest='frozen_model_file', type=str, help='Frozen TensorFlow model file.')
+    parser.add_argument('-output', '--output-folder', dest='output_folder', type=str, help='Output folder to store image.')
 
     args = parser.parse_args()
 

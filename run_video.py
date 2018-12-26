@@ -105,9 +105,9 @@ def main():
         image_landmark = np.concatenate([resize(black_image), image_bgr], axis=1)
 
         if args.display_landmark == 0:
-            cv2.imwrite(os.path.join(args.output_folder, "output_%d.jpg" % count), image_normal)
+            cv2.imwrite(os.path.join(args.output_folder, "scene_%s.png" % '{0:06d}'.format(count)), image_normal)
         else:
-            cv2.imwrite(os.path.join(args.output_folder, "output_%d.jpg" % count), image_landmark)
+            cv2.imwrite(os.path.join(args.output_folder, "scene_%s.png" % '{0:06d}'.format(count)), image_landmark)
 
     sess.close()
     cap.release()

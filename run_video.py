@@ -62,7 +62,7 @@ def main():
         ret, frame = cap.read()
 
         with open(args.log_file, "a") as file:
-            file.write("%d/%d\n" % (count, length))
+            file.write("Running face2face conversion: %d/%d\n" % (count, length))
 
         # resize image and detect face
         try:

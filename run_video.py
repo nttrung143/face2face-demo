@@ -46,7 +46,6 @@ def load_graph(frozen_graph_filename):
 
 def main():
     makedirs(args.output_folder)
-    file = open(args.log_file, "a") 
     # TensorFlow
     graph = load_graph(args.frozen_model_file)
     image_tensor = graph.get_tensor_by_name('image_tensor:0')
@@ -62,7 +61,8 @@ def main():
         count = count + 1
         ret, frame = cap.read()
 
-        file.write("%d/%d\n" % (count, length))
+        with open(args.log_file, "a") as file:
+            file.write("%d/%d\n" % (count, length))
 
         # resize image and detect face
         try:

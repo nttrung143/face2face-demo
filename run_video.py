@@ -54,6 +54,7 @@ def main():
 
     # OpenCV
     cap = cv2.VideoCapture(args.video_source)
+    length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
     count = 0
     while(cap.isOpened()):
@@ -121,6 +122,7 @@ if __name__ == '__main__':
     parser.add_argument('--landmark-model', dest='face_landmark_shape_file', type=str, help='Face landmark model file.')
     parser.add_argument('--tf-model', dest='frozen_model_file', type=str, help='Frozen TensorFlow model file.')
     parser.add_argument('-output', '--output-folder', dest='output_folder', type=str, help='Output folder to store image.')
+    parser.add_argument('-log', '--log-file', dest='log_file', type=str, help='Log file to know progress.')
 
     args = parser.parse_args()
 

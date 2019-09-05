@@ -52,9 +52,11 @@ def main():
 
     while True:
         ret, frame = cap.read()
+        frame = cv2.imread('test.png')
 
         # resize image and detect face
         frame_resize = cv2.resize(frame, None, fx=1 / DOWNSAMPLE_RATIO, fy=1 / DOWNSAMPLE_RATIO)
+        cv2.imwrite('3_frame_resize.png',frame_resize)
         gray = cv2.cvtColor(frame_resize, cv2.COLOR_BGR2GRAY)
         faces = detector(gray, 1)
         black_image = np.zeros(frame.shape, np.uint8)
